@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponseRedirect
 
 from .forms import EmailForm, SubscriptionForm
 from .models import Subscription
@@ -27,6 +27,11 @@ def get_subscription_ref_id():
     except:
         return subscription_ref_id
 
+def share(request, subscription_ref_id):
+    print subscription_ref_id
+    context = {"ref_id": subscription_ref_id}
+    template = 'share.html'
+    return render(request, template, context)
 
 def home(request):
     print request.META.get("REMOTE_ADDR")
@@ -61,7 +66,7 @@ def home(request):
             new_subscription_old.save()
 
         # redirect here
-
+        return HttpResponseRedirect('%s' % (new_subscription_old.ref_id))
 
         # new_subscription.ip_address = get_ip(request)
         # new_subscription.save() # this might give a lot of multiples , so i used get_or_create method
