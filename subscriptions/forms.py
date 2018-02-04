@@ -8,3 +8,6 @@ class EmailForm(forms.Form):
 class SubscriptionForm(forms.ModelForm):
     class Meta:
         model = Subscription
+        fields = ['email',]
+        # we may use also
+        # exclude = []
