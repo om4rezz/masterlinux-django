@@ -2,6 +2,9 @@ from django.shortcuts import render
 
 from .forms import EmailForm, SubscriptionForm
 from .models import Subscription
+
+import uuid
+
 # Create your views here.
 
 def get_ip(request):
@@ -14,6 +17,16 @@ def get_ip(request):
     except:
         ip = ''
     return ip
+
+def get_subscription_ref_id():
+    subscription_ref_id = str(uuid.uuid4())[:12].replace('-', '').lower()
+    try:
+        id_exists = Subscription.objects.get(ref_id=subscription_ref_id)
+        # have to do something to regenerate another one
+        get_subscription_ref_id()
+    except:
+        return subscription_ref_id
+
 
 def home(request):
     print request.META.get("REMOTE_ADDR")
@@ -43,6 +56,7 @@ def home(request):
         new_subscription_old, created = Subscription.objects.get_or_create(email=email) # i recommend not entering any emails from admin because this line may give an error if it returned any multiples
         if created:
             print "this object was created!"
+            new_subscription_old.ref_id = get_subscription_ref_id()
             new_subscription_old.ip_address = get_ip(request)
             new_subscription_old.save()
 
