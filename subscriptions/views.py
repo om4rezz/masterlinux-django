@@ -34,6 +34,13 @@ def share(request, subscription_ref_id):
     return render(request, template, context)
 
 def home(request):
+    try:
+        subscription_id = request.session['subscription_id_ref']
+        obj = Subscription.objects.get(id=subscription_id)
+        print "the email is " + obj.email
+    except:
+        obj = None
+
     print request.META.get("REMOTE_ADDR")
     print request.META.get("HTTP_X_FORWARDED_FOR")
 
