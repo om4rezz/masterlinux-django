@@ -69,8 +69,15 @@ def home(request):
         if created:
             print "this object was created!"
             new_subscription_old.ref_id = get_subscription_ref_id()
+            # add the friend who referred us into the subscription model or related one
+            if not obj == None:
+                new_subscription_old.friend = obj
             new_subscription_old.ip_address = get_ip(request)
             new_subscription_old.save()
+
+        # print add "friends" that subscribed as a result of main sharer email (assertion)
+        print Subscription.objects.filter(friend=obj).count()
+        print obj.referral.all().count()
 
         # redirect here
         return HttpResponseRedirect('%s' % (new_subscription_old.ref_id))

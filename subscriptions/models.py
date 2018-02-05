@@ -4,7 +4,8 @@ from django.db import models
 
 class Subscription(models.Model):
     email = models.EmailField()
-    ref_id = models.CharField(max_length=120, default='ABC')
+    friend = models.ForeignKey("self", related_name='referral', null = True, blank = True)
+    ref_id = models.CharField(max_length=121, default='ABC')
     ip_address = models.CharField(max_length=120, default='ABC')
     timestamp = models.DateTimeField(auto_now_add = True, auto_now = False)
     updated = models.DateTimeField(auto_now_add = False, auto_now = True)

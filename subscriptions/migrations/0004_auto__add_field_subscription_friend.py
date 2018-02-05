@@ -8,22 +8,25 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding unique constraint on 'Subscription', fields ['email', 'ref_id']
-        db.create_unique(u'subscriptions_subscription', ['email', 'ref_id'])
+        # Adding field 'Subscription.friend'
+        db.add_column(u'subscriptions_subscription', 'friend',
+                      self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='referral', null=True, to=orm['subscriptions.Subscription']),
+                      keep_default=False)
 
 
     def backwards(self, orm):
-        # Removing unique constraint on 'Subscription', fields ['email', 'ref_id']
-        db.delete_unique(u'subscriptions_subscription', ['email', 'ref_id'])
+        # Deleting field 'Subscription.friend'
+        db.delete_column(u'subscriptions_subscription', 'friend_id')
 
 
     models = {
         u'subscriptions.subscription': {
             'Meta': {'unique_together': "(('email', 'ref_id'),)", 'object_name': 'Subscription'},
-            'email': ('django.db.models.fields.EmailField', [], {'unique': 'True', 'max_length': '75'}),
+            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75'}),
+            'friend': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'referral'", 'null': 'True', 'to': u"orm['subscriptions.Subscription']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'ip_address': ('django.db.models.fields.CharField', [], {'default': "'ABC'", 'max_length': '120'}),
-            'ref_id': ('django.db.models.fields.CharField', [], {'default': "'ABC'", 'max_length': '120'}),
+            'ref_id': ('django.db.models.fields.CharField', [], {'default': "'ABC'", 'max_length': '121'}),
             'timestamp': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'})
         }
